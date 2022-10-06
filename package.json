@@ -1,0 +1,18 @@
+{
+  "name": "nodejs-example",
+  "version": "1.0.0",
+  "description": "Simple Node.js example with Dockerfile and Kubernetes deployment configuration.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "keywords": [],
+  "author": "ashley@codecapers.com.au",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "figit": "^0.0.8"
+  }
+}

@@ -1,0 +1,47 @@
+#
+# Deploys the nodejs-example microservice to Kubernetes.
+#
+# To deploy:
+#
+# export CONTAINER_REGISTRY=<your-container-registry>
+# export VERSION=<the-version-to-deploy>
+# npx figit ./scripts/kubernetes/nodejs-example.yaml --output yaml | kubectl apply -f -
+#
+# Note:
+#
+# Figit is used to inject environment variables into the Kubernetes Yaml configuration file.
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-example
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodejs-example
+  template:
+    metadata:
+      labels:
+        app: nodejs-example
+    spec:
+      containers: 
+      - name: nodejs-example
+        image: {{CONTAINER_REGISTRY}}/nodejs-example:{{VERSION}}
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PORT
+          value: "4000"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-example
+spec:
+  selector:
+    app: nodejs-example
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 4000
