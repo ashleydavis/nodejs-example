@@ -110,7 +110,7 @@ To find the IP address allocated to the web server, invoke:
 kubectl get services
 ```
 
-Pull out the IP address for the nodejs-example service and put that into your web browser. You should see the hello world message in the browser.
+Pull out the EXTERNAL-IP address for the nodejs-example service and put that into your web browser. You should see the hello world message in the browser.
 
 To check console logging for the Node.js app:
 
