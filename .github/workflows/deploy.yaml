@@ -1,0 +1,71 @@
+# 
+# GitHub Actions workflow.
+#
+# Automatically deploys the Node.js application to Kubernetes on push.
+#
+
+name: Deploy Application
+
+on:
+  push:
+    branches: 
+      - main
+  workflow_dispatch: 
+
+jobs:
+
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    env:
+      VERSION: ${{ github.sha }}
+      CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY }}
+      REGISTRY_UN: ${{ secrets.REGISTRY_UN }}
+      REGISTRY_PW: ${{ secrets.REGISTRY_PW  }}
+
+    steps:
+      
+      # Checks-out your repository under $GITHUB_WORKSPACE.
+      - uses: actions/checkout@v2
+
+      #
+      # Builds the Docker image.
+      #
+      - name: Build
+        run: ./scripts/build-image.sh
+
+      #
+      # Publishes the Docker image to the container registry.
+      #
+      - name: Publish
+        run: ./scripts/push-image.sh
+
+      #
+      # Installs Node.js (for figit).
+      #
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 18
+
+      #
+      # Installs Figit.
+      #
+      - name: Install dependencies
+        run: npm install
+
+      #
+      # Install Kubectl and connect to the cluster.
+      #
+      # https://github.com/marketplace/actions/kubernetes-cli-kubectl
+      #
+      - uses: tale/kubectl-action@v1
+        with:
+          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+          kubectl-version: v1.24.2
+      
+      #
+      # Expands the configuration template and deploys the microservice.
+      #
+      - name: Deploy
+        run: ./scripts/deploy.sh

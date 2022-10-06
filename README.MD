@@ -13,7 +13,10 @@ This example project accompanies the blog post [The quick guide to creating a pr
   - deploy.sh         -> Deploys the Node.js application to Kubernetes.
   - delete.sh         -> Deletes the Node.js application from Kubernetes.
   - kubernetes/         
-    - deploy.yaml       -> Kubernetes configuration to deploy the Node.js app.    
+    - deploy.yaml   -> Kubernetes configuration to deploy the Node.js app.    
+- .github/
+  - workflows/
+    - deploy.yaml   -> GitHub Actions workflow for deployment to Kubernetes.
 - .dockerignore     -> Make Docker ignore specified files.
 - Dockerfile        -> Script file for building our Docker image.
 - package.json      -> Node.js package file, with project dependencies and metadata.
@@ -129,6 +132,25 @@ Or use the shell script:
 
 ```bash
 ./scripts/destroy.sh
+```
+
+## Setup for automated deployment
+
+The GitHub Actions `deploy.yaml` workflow automatically builds, publishes and deploys the Node.js application to Kubernetes when code is pushed to this repository.
+
+To get this working in your own code repostiory you must add GitHub Secrets for the following environment variables:
+- `CONTAINER_REGISTRY`
+- `REGISTRY_UN`
+- `REGISTRY_PW`
+
+Just don't set `VERSION` because that is automatically derived from the current commit hash.
+
+You also need a GitHub Secret to configure Kubectl's connection to your Kubernetes cluster. Add `KUBE_CONFIG` to be the base64 encoded version of your local Kubernetes configuration.
+
+You can encoded your local configuration like this:
+
+```bash
+cat ~/.kube/config | base64
 ```
 
 ## Using this repo as a template
