@@ -4,26 +4,29 @@ Just a simple Node.js "hello world" example with a Dockerfile and Kubernetes dep
 
 This example project accompanies the blog post [The quick guide to creating a production Kubernetes cluster](https://www.codecapers.com.au/kub-cluster-quick-2/).
 
-## Files
+# Project layout
 
-- src/index.js      -> Example Express web server.
-- scripts/          -> Shell scripts for build, publish and deployment.
-  - build-image.sh    -> Builds the Docker image.
-  - push-image.sh     -> Published the Docker image.
-  - deploy.sh         -> Deploys the Node.js application to Kubernetes.
-  - delete.sh         -> Deletes the Node.js application from Kubernetes.
-  - kubernetes/         
-    - deploy.yaml   -> Kubernetes configuration to deploy the Node.js app.    
-- .github/
-  - workflows/
-    - deploy.yaml   -> GitHub Actions workflow for deployment to Kubernetes.
-- .dockerignore     -> Make Docker ignore specified files.
-- Dockerfile        -> Script file for building our Docker image.
-- package.json      -> Node.js package file, with project dependencies and metadata.
+```
+nodejs-example
+│   Dockerfile          -> Script file for building our Docker image.
+│   package.json        -> Project metadata and dependencies.
+├───src
+│       index.js        -> Example Express web server.
+├───scripts             -> Shell scripts for build, publish and deployment.
+│   │   build-image.sh  -> Builds the Docker image.
+│   │   push-image.sh   -> Published the Docker image.
+│   │   deploy.sh       -> Deploys the Node.js application to Kubernetes.
+│   │   delete.sh       -> Deletes the Node.js application from Kubernetes.
+│   └───kubernetes
+│           deploy.yaml -> Kubernetes configuration to deploy the Node.js app.    
+└───.github
+    └───workflows/
+            deploy.yaml -> GitHub Actions workflow for deployment to Kubernetes.
+```
 
-## Setup
+# Setup
 
-You need Node.js and Docker installed.
+You need [Node.js](https://nodejs.org/en/) and [Docker Desktop](https://www.docker.com/products/docker-desktop) installed.
 
 Clone the example repo:
 
@@ -38,9 +41,9 @@ cd nodejs-example
 npm install
 ```
 
-## Directly run it
+# Directly run it
 
-The example Node.js application is just "Hello world", you run it directly like this:
+The example Node.js application is just "Hello world", you run it directly under Node.js like this:
 
 ```bash
 npm start
@@ -97,11 +100,11 @@ Or just run the deploy shell script:
 
 ## Check your deployment 
 
-Check the pod and deployment:
+Check the status of the pod and deployment:
 
 ```bash
 kubectl get pods
-kubectl get deployment
+kubectl get deployments
 ```
 
 To find the IP address allocated to the web server, invoke:
@@ -131,7 +134,7 @@ npx figit ./scripts/kubernetes/deploy.yaml --output yaml | kubectl delete -f -
 Or use the shell script:
 
 ```bash
-./scripts/destroy.sh
+./scripts/delete.sh
 ```
 
 ## Setup for automated deployment
